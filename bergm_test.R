@@ -14,7 +14,7 @@ network_df <- tags_df %>%
 nw <- network(network_df, directed = F, multiple = T)
 
 
-summary(nw~edges+nodeMatch('fandom_label'))
+summary(nw~edges)
 
 m1 <- bergm(nw~edges)
 
