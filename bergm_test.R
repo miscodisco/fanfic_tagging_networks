@@ -1,23 +1,22 @@
 pacman::p_load(igraph,tidyverse, Bergm, ergm, data.table)
 
-
-tags_df <- read_csv('dat/tags.csv')
+tags_df <- read_csv('dat/anon_tags.csv')
 
 network_df <- tags_df %>%
-  inner_join(tags_df, by = "work_id") %>% 
-  select(node_a = tags.x, node_b = tags.y, fandom_label = fandom_label.x, date = date.x, work_id) %>% 
+  inner_join(tags_df, by = "anon_work_id") %>% 
+  select(node_a = tags.x, node_b = tags.y, fandom_label = fandom_label.x, date = date.x, anon_work_id) %>% 
   filter(node_a != node_b) %>% 
   igraph::graph_from_data_frame(directed = FALSE) %>% 
   igraph::as_data_frame(what = "edges") %>% 
-  distinct()
+  distinct() 
 
 
 nw <- network(network_df, directed = F, multiple = T)
 
 
-summary(nw~edges)
+summary(nw~edges+nodeMatch('fandom_label'))
 
-m1 <- bergm(idol_nw~edges)
+m1 <- bergm(nw~edges)
 
 ###### fandoms #######
 
